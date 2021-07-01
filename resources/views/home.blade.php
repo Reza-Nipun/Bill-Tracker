@@ -25,6 +25,13 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
+                        @if($errors->any())
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li >{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                         <h3 class="btn btn-block btn-success btn-lg">Hey {{ (Auth::user()->is_admin == 1) ? 'ADMIN' : 'USER' }}, Welcome to Bill Tracker!</h3>
                     </div>
                     <!-- /.col-md-6 -->

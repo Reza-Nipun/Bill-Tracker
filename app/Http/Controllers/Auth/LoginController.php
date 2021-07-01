@@ -56,9 +56,6 @@ class LoginController extends Controller
         {
             return view('home');
         }else{
-//            return redirect()->route('login')
-//                ->with('failed','Email-Address And Password Are Wrong.');
-
             return $this->sendFailedLoginResponse($request);
         }
 

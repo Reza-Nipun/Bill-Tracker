@@ -17,4 +17,9 @@ Route::get('/', 'Auth\LoginController@index');
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('plant', 'PlantController')->middleware('is_admin');
+});
