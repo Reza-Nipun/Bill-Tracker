@@ -202,7 +202,7 @@
         <!-- Brand Logo -->
         <a href="{{ route('home') }}" class="brand-link text-center">
             {{--<img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">--}}
-            <span class="brand-text font-weight-light">ADMIN</span>
+            <span class="brand-text font-weight-light">USER</span>
         </a>
 
         <!-- Sidebar -->
@@ -254,40 +254,6 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-users-cog nav-icon"></i>
-                            <p>
-                                Users
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('user.index') }}" class="nav-link">
-                                    <i class="nav-icon far fa-circle text-info"></i>
-                                    <p>Users</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-store nav-icon"></i>
-                            <p>
-                                Plants
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('plant.index') }}" class="nav-link">
-                                    <i class="nav-icon far fa-circle text-info"></i>
-                                    <p>Plants</p>
-                                </a>
                             </li>
                         </ul>
                     </li>

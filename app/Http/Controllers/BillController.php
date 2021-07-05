@@ -74,7 +74,7 @@ class BillController extends Controller
         $bill_tracking_no_update->tracking_no = $bill_id.'-'.date('Y-m');
         $bill_tracking_no_update->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Bill Successfully Created!');
     }
 
     /**
@@ -96,7 +96,11 @@ class BillController extends Controller
      */
     public function edit($id)
     {
-        //
+        $title = ' | Edit Bill';
+        $plants = Plant::where('status', 1)->get();
+        $bill = Bill::find($id);
+
+        return view('bill.edit_bill', compact('title', 'plants', 'bill'));
     }
 
     /**
@@ -108,7 +112,30 @@ class BillController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'bill_no' => 'required|unique:bills,bill_no,'.$id,
+            'po_no' => 'required|unique:bills,po_no,'.$id,
+            'bill_date' => 'required|date_format:Y-m-d',
+            'bill_gross_value' => 'required|regex:/^\d*(\.\d{2})?$/',
+            'currency' => 'required',
+            'plant' => 'required',
+        ]);
+
+        $bill = Bill::find($id);
+        $bill->party_name = $request->party_name;
+        $bill->bill_no = $request->bill_no;
+        $bill->po_no = $request->po_no;
+        $bill->bill_date = $request->bill_date;
+        $bill->bill_gross_value = $request->bill_gross_value;
+        $bill->currency = $request->currency;
+        $bill->plant_id = $request->plant;
+        $bill->details = $request->details;
+        $bill->receipt_date_by_tr = date('Y-m-d');
+        $bill->tr_remarks = $request->tr_remarks;
+        $bill->user_id = Auth::user()->id;
+        $bill->save();
+
+        return redirect()->back()->with('success', 'Bill Successfully Updated!');
     }
 
     /**

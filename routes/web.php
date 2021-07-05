@@ -18,7 +18,6 @@ Route::get('/', 'Auth\LoginController@index');
 Auth::routes(['register' => false]);
 
 
-
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/payment_proposal', 'HomeController@paymentProposal')->name('payment_proposal');
@@ -26,6 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/cheque_handover', 'HomeController@chequeHandover')->name('cheque_handover');
 
     Route::resource('plant', 'PlantController')->middleware('is_admin');
+    Route::resource('user', 'UserController')->middleware('is_admin');
 
     Route::resource('bill', 'BillController');
     Route::post('/search_bill', 'BillController@searchBill')->name('search_bill');

@@ -7,13 +7,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Edit Plant</h1>
+                        <h1>Create User</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('plant.index') }}">Plant List</a></li>
-                            <li class="breadcrumb-item active">Edit Plant</li>
+                            <li class="breadcrumb-item active">Create Plant</li>
                         </ol>
                     </div>
                 </div>
@@ -38,10 +38,9 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
-                    <form action="{{ route('plant.update', $plant->id) }}" method="post">
+                    <form action="{{ route('user.store') }}" method="post">
 
                         @csrf
-                        @method('PUT')
 
                     <div class="card-body">
 
@@ -62,16 +61,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="plant_code">Plant Code <span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" id="plant_code" name="plant_code" placeholder="Enter Plant Code" value="{{ $plant->plant_code }}">
+                                    <label for="name">Name <span style="color: red">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="{{ old('name') }}" autocomplete="off">
                                 </div>
                                 <!-- /.form-group -->
                             </div>
                             <!-- /.col -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="plant_name">Plant Name</label>
-                                    <input type="text" class="form-control" id="plant_name" name="plant_name" placeholder="Enter Plant Name" value="{{ $plant->plant_name }}">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" value="{{ old('email') }}" autocomplete="off">
                                 </div>
                                 <!-- /.form-group -->
                             </div>
@@ -81,11 +80,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="status">Status <span style="color: red">*</span></label>
-                                    <select class="form-control select2bs4" style="width: 100%;" name="status" id="status">
-                                        <option value="">Select Status</option>
-                                        <option value="1" @if($plant->status == 1) selected="selected" @endif>Active</option>
-                                        <option value="0" @if($plant->status == 0) selected="selected" @endif>Inactive</option>
+                                    <label for="is_admin">Type <span style="color: red">*</span></label>
+                                    <select class="form-control select2bs4" style="width: 100%;" name="is_admin" id="is_admin">
+                                        <option value="">Select Type</option>
+                                        <option value="1">Admin</option>
+                                        <option value="0">User</option>
                                     </select>
                                 </div>
                                 <!-- /.form-group -->
@@ -93,13 +92,36 @@
                             <!-- /.col -->
                             <div class="col-md-6">
                                 <div class="form-group">
-
+                                    <label for="status">Status <span style="color: red">*</span></label>
+                                    <select class="form-control select2bs4" style="width: 100%;" name="status" id="status">
+                                        <option value="">Select Status</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
                                 </div>
                                 <!-- /.form-group -->
                             </div>
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password">Default Password <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" id="password" name="password" placeholder="Enter Password" autocomplete="off" value="12345678">
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
