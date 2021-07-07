@@ -20,13 +20,18 @@ Auth::routes(['register' => false]);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::post('/payment_proposal', 'HomeController@paymentProposal')->name('payment_proposal');
-    Route::post('/payment_approval', 'HomeController@paymentApproval')->name('payment_approval');
-    Route::post('/cheque_handover', 'HomeController@chequeHandover')->name('cheque_handover');
 
     Route::resource('plant', 'PlantController')->middleware('is_admin');
     Route::resource('user', 'UserController')->middleware('is_admin');
+    Route::resource('currency', 'CurrencyController')->middleware('is_admin');
 
     Route::resource('bill', 'BillController');
     Route::post('/search_bill', 'BillController@searchBill')->name('search_bill');
+    Route::post('/return_to_ap', 'BillController@returnToAP')->name('return_to_ap');
+    Route::post('/receipt_by_tr', 'BillController@receiptByTR')->name('receipt_by_tr');
+    Route::post('/payment_proposal', 'BillController@paymentProposal')->name('payment_proposal');
+    Route::post('/payment_approval', 'BillController@paymentApproval')->name('payment_approval');
+    Route::post('/cheque_print', 'BillController@chequePrint')->name('cheque_print');
+    Route::post('/cheque_handover', 'BillController@chequeHandover')->name('cheque_handover');
+
 });

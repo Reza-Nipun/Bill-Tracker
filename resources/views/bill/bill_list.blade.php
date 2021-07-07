@@ -46,8 +46,64 @@
                                         <select class="form-control select2bs4" style="width: 100%;" name="bill_no_filter" id="bill_no_filter">
                                             <option value="">Select Bill</option>
                                             @foreach($bill_nos as $bill_no)
-                                                <option value="{{ $bill_no->id }}">{{ $bill_no->bill_no }}</option>
+                                                <option value="{{ $bill_no->bill_no }}">{{ $bill_no->bill_no }}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="po_no_filter">PO</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" name="po_no_filter" id="po_no_filter">
+                                            <option value="">Select PO</option>
+                                            @foreach($po_nos as $po_no)
+                                                <option value="{{ $po_no->po_no }}">{{ $po_no->po_no }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="plant_filter">Plant</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" name="plant_filter" id="plant_filter">
+                                            <option value="">Select Plant</option>
+                                            @foreach($plants as $plant)
+                                                <option value="{{ $plant->id }}">{{ $plant->plant_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="party_filter">Party</label>
+                                        <input type="text" class="form-control" id="party_filter">
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="cheque_no_filter">Cheque No</label>
+                                        <input type="text" class="form-control" id="cheque_no_filter">
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="bill_status_filter">Bill Status</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" name="bill_status_filter" id="bill_status_filter">
+                                            <option value="">Select Status</option>
+                                            <option value="0">TR Receive</option>
+                                            <option value="1">Payment Proposal</option>
+                                            <option value="2">Payment Approve</option>
+                                            <option value="3">Cheque Handover</option>
                                         </select>
                                     </div>
                                     <!-- /.form-group -->
@@ -64,20 +120,7 @@
                                         </div>
                                         <!-- /.input group -->
                                     </div>
-                                        <!-- /.form group -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="plant_filter">Plant</label>
-                                        <select class="form-control select2bs4" style="width: 100%;" name="plant_filter" id="plant_filter">
-                                            <option value="">Select Plant</option>
-                                            @foreach($plants as $plant)
-                                                <option value="{{ $plant->id }}">{{ $plant->plant_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <!-- /.form-group -->
+                                    <!-- /.form group -->
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-md-3">
@@ -94,14 +137,6 @@
                                     <!-- /.form group -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="cheque_no_filter">Cheque No</label>
-                                        <input type="text" class="form-control" id="cheque_no_filter">
-                                    </div>
-                                    <!-- /.form-group -->
-                                </div>
-                                <!-- /.col -->
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Cheque Handover Date Range <span class="badge badge-danger" onclick="return $('#cheque_handover_date_range_filter').val('');"><i class="far fa-calendar-times"></i></span></label>
@@ -114,20 +149,6 @@
                                         <!-- /.input group -->
                                     </div>
                                     <!-- /.form group -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="bill_status_filter">Bill Status</label>
-                                        <select class="form-control select2bs4" style="width: 100%;" name="bill_status_filter" id="bill_status_filter">
-                                            <option value="">Select Status</option>
-                                            <option value="0">TR Receive</option>
-                                            <option value="1">Payment Proposal</option>
-                                            <option value="2">Payment Approve</option>
-                                            <option value="3">Cheque Handover</option>
-                                        </select>
-                                    </div>
-                                    <!-- /.form-group -->
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-md-2">
@@ -152,7 +173,8 @@
                             <table id="table_id" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>SL</th>
+                                        {{--<th>SL</th>--}}
+                                        <th>Action</th>
                                         <th>Track#</th>
                                         <th>Party</th>
                                         <th>PO#</th>
@@ -164,57 +186,74 @@
                                         <th>Cheque#</th>
                                         <th style="width: 50px">Status</th>
                                         <th>Date</th>
-                                        <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody id="tbody_id">
                                     @foreach($bills as $k => $bill)
                                         <tr>
-                                            <td>{{ $k+1 }}</td>
+                                            {{--<td>{{ $k+1 }}</td>--}}
+                                            <td>
+                                                <a href="{{ route('bill.edit', $bill->id) }}" class="btn btn-xs btn-primary" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @if($bill->status == 100)
+                                                    <span class="btn btn-xs btn-warning" title="TR Receipt" onclick="receiptByTRModal('{{ $bill->id }}')">
+                                                        <i class="fas fa-hand-holding-usd"></i> TR Receipt
+                                                    </span>
+                                                @elseif($bill->status == 200)
+                                                    <span class="btn btn-xs btn-warning" title="Payment Proposal" onclick="paymentProposalModal('{{ $bill->id }}')">
+                                                        <i class="fas fa-hand-holding-usd"></i> Proposal
+                                                    </span>
+                                                    <span class="btn btn-xs btn-danger" title="Return to AP" onclick="returnToAPModal('{{ $bill->id }}')">
+                                                        <i class="fas fa-undo-alt"></i> Return to AP
+                                                    </span>
+                                                @elseif($bill->status == 300)
+                                                    <span class="btn btn-xs btn-success" title="Payment Approve" onclick="paymentApprovalModal('{{ $bill->id }}')">
+                                                        <i class="fas fa-money-check-alt"></i> Approve
+                                                    </span>
+                                                @elseif($bill->status == 301)
+                                                    <span class="btn btn-xs btn-info" title="Cheque Print" onclick="chequePrintModal('{{ $bill->id }}', '{{ $bill->bill_no }}')">
+                                                        <i class="fas fa-money-check"></i> Cheque
+                                                    </span>
+                                                @elseif($bill->status == 400)
+                                                    <span class="btn btn-xs btn-info" title="Cheque Handover" onclick="chequeHandoverModal('{{ $bill->id }}')">
+                                                        <i class="fas fa-money-check"></i> Handover
+                                                    </span>
+                                                @endif
+                                            </td>
                                             <td>{{ $bill->tracking_no }}</td>
                                             <td>{{ $bill->party_name }}</td>
                                             <td>{{ $bill->po_no }}</td>
                                             <td>{{ $bill->bill_no }}</td>
                                             <td>{{ $bill->bill_date }}</td>
                                             <td>{{ $bill->bill_gross_value }}</td>
-                                            <td>{{ $bill->currency }}</td>
+                                            <td>{{ $bill->currency->currency }}</td>
                                             <td>{{ $bill->plant->plant_name }}</td>
                                             <td>{{ $bill->cheque_no }}</td>
                                             <td>
-                                                @if($bill->status == 0)
-                                                    Received by TR
-                                                @elseif($bill->status == 1)
+                                                @if($bill->status == 100)
+                                                    Return to AP
+                                                @elseif($bill->status == 200)
+                                                    Receipt by TR
+                                                @elseif($bill->status == 300)
                                                     Payment Proposal
-                                                @elseif($bill->status == 2)
+                                                @elseif($bill->status == 301)
                                                     Approved for Payment
-                                                @elseif($bill->status == 3)
+                                                @elseif($bill->status == 400)
+                                                    Check Printed
+                                                @elseif($bill->status == 401)
                                                     Check Handover
                                                 @endif
                                             </td>
                                             <td>
-                                                {!! '<span class="badge badge-secondary">Receipt: '.$bill->receipt_date_by_tr.'</span>' !!}<br />
+                                                {!! '<span class="badge badge-danger">AP-Return: '.$bill->return_to_ap_date.'</span>' !!}<br />
+                                                {!! '<span class="badge badge-secondary">TR-Receipt: '.$bill->receipt_date_by_tr.'</span>' !!}<br />
                                                 {!! '<span class="badge badge-info">Proposal: '.$bill->payment_proposal_date.'</span>' !!}<br />
                                                 {!! '<span class="badge badge-warning">Approve: '.$bill->approved_for_payment_date.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-success">Cheque: '.$bill->cheque_handover_date.'</span>' !!}
+                                                {!! '<span class="badge badge-primary">Cheque: '.$bill->cheque_print_date.'</span>' !!}<br />
+                                                {!! '<span class="badge badge-success">Handover: '.$bill->cheque_handover_date.'</span>' !!}
                                              </td>
-                                            <td>
-                                                <a href="{{ route('bill.edit', $bill->id) }}" class="btn btn-xs btn-primary" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                @if($bill->status == 0)
-                                                    <span class="btn btn-xs btn-warning" title="Payment Proposal" onclick="paymentProposal('{{ $bill->id }}')">
-                                                        <i class="fas fa-hand-holding-usd"></i> Proposal
-                                                    </span>
-                                                @elseif($bill->status == 1)
-                                                    <span class="btn btn-xs btn-success" title="Payment Approve" onclick="paymentApproval('{{ $bill->id }}')">
-                                                        <i class="fas fa-money-check-alt"></i> Approve
-                                                    </span>
-                                                @elseif($bill->status == 2)
-                                                    <span class="btn btn-xs btn-info" title="Cheque Handover" onclick="chequeHandoverModal('{{ $bill->id }}', '{{ $bill->bill_no }}')">
-                                                        <i class="fas fa-money-check"></i> Cheque
-                                                    </span>
-                                                @endif
-                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -236,7 +275,6 @@
                 </div>
             </div>
 
-        </div>
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -246,7 +284,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cheque Handover</h4>
+                <h4 class="modal-title">Cheque Print</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -274,7 +312,168 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" onclick="chequeHandover()">SAVE</button>
+                <button type="button" class="btn btn-success" onclick="chequePrint()">SAVE</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-lg-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Return to AP</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="return_to_ap_remarks">Remarks</label>
+                            <textarea class="form-control" id="return_to_ap_remarks" name="return_to_ap_remarks"></textarea>
+                            <input type="hidden" class="form-control" id="bill_id_return_to_ap" name="bill_id_return_to_ap">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="returnToAP()">SAVE</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-lg-2">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>Are You Sure to Receipt by TR?</h5>
+                            <input type="hidden" class="form-control" id="bill_id_receipt_by_tr" name="bill_id_receipt_by_tr">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="receiptByTR()">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-lg-3">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>Are You Sure to Payment Proposal?</h5>
+                            <input type="hidden" class="form-control" id="bill_id_payment_proposal" name="bill_id_payment_proposal">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="paymentProposal()">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-lg-4">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>Are You Sure to Approve Payment Proposal?</h5>
+                            <input type="hidden" class="form-control" id="bill_id_approve_payment_proposal" name="bill_id_approve_payment_proposal">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="paymentApproval()">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-lg-5">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>Are You Sure to Handover Cheque?</h5>
+                            <input type="hidden" class="form-control" id="bill_id_cheque_handover" name="bill_id_cheque_handover">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="chequeHandover()">Yes</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -285,7 +484,63 @@
 
 <script type="text/javascript">
 
-    function paymentProposal(bill_id) {
+
+    function returnToAPModal(bill_id) {
+        $("#bill_id_return_to_ap").val(bill_id);
+
+        $("#modal-lg-1").modal('show');
+    }
+
+    function returnToAP() {
+        var bill_id = $("#bill_id_return_to_ap").val();
+        var return_to_ap_remarks = $("#return_to_ap_remarks").val();
+
+        $.ajax({
+            url: "{{ route("return_to_ap") }}",
+            type:'POST',
+            data: {_token:"{{csrf_token()}}", bill_id: bill_id, return_to_ap_remarks: return_to_ap_remarks},
+            dataType: "html",
+            success: function (data) {
+                if(data == 'done'){
+                    $("#modal-lg-1").modal('hide');
+                    $("#search_btn").click();
+                }
+            }
+        });
+    }
+
+    function receiptByTRModal(bill_id) {
+        $("#bill_id_receipt_by_tr").val(bill_id);
+
+        $("#modal-lg-2").modal('show');
+    }
+
+    function receiptByTR() {
+        var bill_id = $("#bill_id_receipt_by_tr").val();
+
+        $.ajax({
+            url: "{{ route("receipt_by_tr") }}",
+            type:'POST',
+            data: {_token:"{{csrf_token()}}", bill_id: bill_id},
+            dataType: "html",
+            success: function (data) {
+                if(data == 'done'){
+                    $("#modal-lg-2").modal('hide');
+                    $("#search_btn").click();
+                }
+            }
+        });
+    }
+
+    function paymentProposalModal(bill_id) {
+        $("#bill_id_payment_proposal").val(bill_id);
+
+        $("#modal-lg-3").modal('show');
+    }
+
+    function paymentProposal() {
+        var bill_id = $("#bill_id_payment_proposal").val();
+
         $.ajax({
             url: "{{ route("payment_proposal") }}",
             type:'POST',
@@ -293,14 +548,22 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
-                    $("#modal-lg").modal('hide');
+                    $("#modal-lg-3").modal('hide');
                     $("#search_btn").click();
                 }
             }
         });
     }
 
-    function paymentApproval(bill_id) {
+    function paymentApprovalModal(bill_id) {
+        $("#bill_id_approve_payment_proposal").val(bill_id);
+
+        $("#modal-lg-4").modal('show');
+    }
+
+    function paymentApproval() {
+        var bill_id = $("#bill_id_approve_payment_proposal").val();
+
         $.ajax({
             url: "{{ route("payment_approval") }}",
             type:'POST',
@@ -308,26 +571,26 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
-                    $("#modal-lg").modal('hide');
+                    $("#modal-lg-4").modal('hide');
                     $("#search_btn").click();
                 }
             }
         });
     }
 
-    function chequeHandoverModal(bill_id, bill_no) {
+    function chequePrintModal(bill_id, bill_no) {
         $("#bill_no").val(bill_no);
         $("#bill_id").val(bill_id);
 
         $("#modal-lg").modal('show');
     }
 
-    function chequeHandover() {
+    function chequePrint() {
         var bill_id = $("#bill_id").val();
         var cheque_no = $("#cheque_no").val();
 
         $.ajax({
-            url: "{{ route("cheque_handover") }}",
+            url: "{{ route("cheque_print") }}",
             type:'POST',
             data: {_token:"{{csrf_token()}}", bill_id: bill_id, cheque_no: cheque_no},
             dataType: "html",
@@ -340,11 +603,36 @@
         });
     }
 
+    function chequeHandoverModal(bill_id) {
+        $("#bill_id_cheque_handover").val(bill_id);
+
+        $("#modal-lg-5").modal('show');
+    }
+    
+    function chequeHandover() {
+        var bill_id = $("#bill_id_cheque_handover").val();
+
+        $.ajax({
+            url: "{{ route("cheque_handover") }}",
+            type:'POST',
+            data: {_token:"{{csrf_token()}}", bill_id: bill_id},
+            dataType: "html",
+            success: function (data) {
+                if(data == 'done'){
+                    $("#modal-lg-5").modal('hide');
+                    $("#search_btn").click();
+                }
+            }
+        });
+    }
+
     function searchBills() {
-        var bill_id = $("#bill_no_filter").val();
+        var bill_no = $("#bill_no_filter").val();
+        var po_no = $("#po_no_filter").val();
         var plant_id = $("#plant_filter").val();
         var cheque_no = $("#cheque_no_filter").val();
         var bill_status = $("#bill_status_filter").val();
+        var party_name = $("#party_filter").val();
 
 //        Bill Date Range Start
         var bill_dt_range_filter = $("#bill_date_range_filter").val();
@@ -376,7 +664,7 @@
         $.ajax({
             url: "{{ route("search_bill") }}",
             type:'POST',
-            data: {_token:"{{csrf_token()}}", bill_id: bill_id, plant_id: plant_id, cheque_no: cheque_no, status: bill_status, bill_date_from: bill_date_from, bill_date_to: bill_date_to, receipt_date_from: receipt_date_from, receipt_date_to: receipt_date_to, cheque_handover_date_from: cheque_handover_date_from, cheque_handover_date_to: cheque_handover_date_to},
+            data: {_token:"{{csrf_token()}}", bill_no: bill_no, po_no: po_no, party_name: party_name, plant_id: plant_id, cheque_no: cheque_no, status: bill_status, bill_date_from: bill_date_from, bill_date_to: bill_date_to, receipt_date_from: receipt_date_from, receipt_date_to: receipt_date_to, cheque_handover_date_from: cheque_handover_date_from, cheque_handover_date_to: cheque_handover_date_to},
             dataType: "html",
             success: function (data) {
                 $("#tbody_id").append(data);

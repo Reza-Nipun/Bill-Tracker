@@ -10,4 +10,9 @@ class Bill extends Model
     {
         return $this->belongsTo(Plant::class, 'plant_id');
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
+    }
 }

@@ -293,6 +293,23 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
+                            <i class="fas fa-money-bill-alt nav-icon"></i>
+                            <p>
+                                Currency
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('currency.index') }}" class="nav-link">
+                                    <i class="nav-icon far fa-circle text-info"></i>
+                                    <p>Currency</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
                             <i class="fas fa-receipt nav-icon"></i>
                             <p>
                                 Bills

@@ -106,7 +106,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="currency">Currency <span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" id="currency" name="currency" placeholder="Enter Currency" value="{{ $bill->currency }}">
+                                    <select class="form-control select2bs4" style="width: 100%;" name="currency" id="currency">
+                                        <option value="">Select Currency</option>
+                                        @foreach($currencies as $currency)
+                                            <option value="{{ $currency->id }}" @if($bill->currency->id == $currency->id) selected="selected" @endif>
+                                                {{ $currency->currency }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <!-- /.form-group -->
                             </div>
