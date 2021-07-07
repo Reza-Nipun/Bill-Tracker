@@ -33,5 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/payment_approval', 'BillController@paymentApproval')->name('payment_approval');
     Route::post('/cheque_print', 'BillController@chequePrint')->name('cheque_print');
     Route::post('/cheque_handover', 'BillController@chequeHandover')->name('cheque_handover');
+    Route::get('/file_upload', 'BillController@excelUpload')->name('file_upload');
+    Route::post('/upload_file', 'BillController@uploadFile')->name('upload_file');
 
 });

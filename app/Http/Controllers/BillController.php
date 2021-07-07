@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Bill;
 use App\Currency;
 use App\Plant;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class BillController extends Controller
 {
@@ -18,7 +20,7 @@ class BillController extends Controller
     public function index()
     {
         $title = ' | Bill List';
-        $bills = Bill::paginate(100);
+        $bills = Bill::where('status', '<>', 401)->orderBy('bill_date', 'ASC')->paginate(100);
         $bill_nos = Bill::groupBy('bill_no')->get();
         $po_nos = Bill::groupBy('po_no')->get();
         $plants = Plant::where('status', 1)->get();
@@ -174,68 +176,70 @@ class BillController extends Controller
 
         $query = Bill::query();
 
-        if (!empty($bill_no)) {
+        if(($bill_no==null) && ($po_no==null) && ($plant_id==null) && ($cheque_no==null) && ($party_name==null) && ($status==null) && ($bill_date_from==null) && ($bill_date_to==null) && ($receipt_date_from==null) && ($receipt_date_to==null) && ($cheque_handover_date_from==null) && ($cheque_handover_date_to==null)){
+            $query = $query->where('status', '<>', 401);
+        }
+
+        if ($bill_no!=null) {
             $query = $query->where('bill_no', $bill_no);
         }
 
-        if (!empty($po_no)) {
+        if ($po_no!=null) {
             $query = $query->where('po_no', $po_no);
         }
 
-        if (!empty($plant_id)) {
+        if ($plant_id!=null) {
             $query = $query->where('plant_id', $plant_id);
         }
 
-        if (!empty($cheque_no)) {
+        if ($cheque_no!=null) {
             $query = $query->where('cheque_no', 'LIKE', '%' . $cheque_no . '%');
         }
 
-        if (!empty($party_name)) {
+        if ($party_name!=null) {
             $query = $query->where('party_name', 'LIKE', '%' . $party_name . '%');
         }
 
-        if (!empty($status)) {
+        if ($status!=null) {
             $query = $query->where('status', $status);
         }
 
-        if (!empty($bill_date_from) && !empty($bill_date_to)) {
+        if (($bill_date_from!=null) && ($bill_date_to!=null)) {
             $query = $query->whereBetween('bill_date', [$bill_date_from, $bill_date_to]);
         }
 
-        if (!empty($receipt_date_from) && !empty($receipt_date_to)) {
+        if (($receipt_date_from!=null) && ($receipt_date_to!=null)) {
             $query = $query->whereBetween('receipt_date_by_tr', [$receipt_date_from, $receipt_date_to]);
         }
 
-        if (!empty($cheque_handover_date_from) && !empty($cheque_handover_date_to)) {
+        if (($cheque_handover_date_from!=null) && ($cheque_handover_date_to!=null)) {
             $query = $query->whereBetween('cheque_handover_date', [$cheque_handover_date_from, $cheque_handover_date_to]);
         }
 
-//        if ($this == $yet_another_thing) {
-//            $query = $query->orderBy('this');
-//        }
+        $query = $query->orderBy('bill_date', 'ASC');
 
         $bills = $query->get();
-
-        $change_status_btn = '';
 
         $new_row = '';
 
         foreach ($bills AS $k => $bill){
 
             if ($bill->status == 100){
-                $change_status_btn .= '<span class="btn btn-xs btn-warning ml-1" title = "TR Receipt" onclick = "receiptByTRModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> TR Receipt</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "TR Receipt" onclick = "receiptByTRModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> TR Receipt</span>';
             }
             elseif ($bill->status == 200){
-                $change_status_btn .= '<span class="btn btn-xs btn-warning ml-1" title = "Payment Proposal" onclick = "paymentProposalModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> Proposal</span><span class="btn btn-xs btn-danger ml-1" title="Return to AP" onclick="returnToAPModal('."'".$bill->id."'".')"><i class="fas fa-undo-alt"></i> Return to AP</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "Payment Proposal" onclick = "paymentProposalModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> Proposal</span><span class="btn btn-xs btn-danger ml-1" title="Return to AP" onclick="returnToAPModal('."'".$bill->id."'".')"><i class="fas fa-undo-alt"></i> Return to AP</span>';
             }
             elseif($bill->status == 300){
-                $change_status_btn .= '<span class="btn btn-xs btn-success ml-1" title = "Payment Approve" onclick = "paymentApprovalModal('."'".$bill->id."'".')" ><i class="fas fa-money-check-alt" ></i> Approve</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-success ml-1" title = "Payment Approve" onclick = "paymentApprovalModal('."'".$bill->id."'".')" ><i class="fas fa-money-check-alt" ></i> Approve</span>';
             }
             elseif($bill->status == 301){
-                $change_status_btn .= '<span class="btn btn-xs btn-info ml-1" title = "Cheque Print" onclick = "chequePrintModal('."'".$bill->id."'".', '."'".$bill->bill_no."'".')" ><i class="fas fa-money-check"></i > Cheque</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Print" onclick = "chequePrintModal('."'".$bill->id."'".', '."'".$bill->bill_no."'".')" ><i class="fas fa-money-check"></i > Cheque</span>';
             }
             elseif($bill->status == 400){
-                $change_status_btn .= '<span class="btn btn-xs btn-info ml-1" title = "Cheque Handover" onclick = "chequeHandoverModal('."'".$bill->id."'".')" ><i class="fas fa-money-check" ></i> Handover</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Handover" onclick = "chequeHandoverModal('."'".$bill->id."'".')" ><i class="fas fa-money-check" ></i> Handover</span>';
+            }else{
+                $change_status_btn = '';
             }
 
             $new_row .= '<tr>';
@@ -257,7 +261,6 @@ class BillController extends Controller
         }
 
         return $new_row;
-
     }
 
     public function returnToAP(Request $request){
@@ -330,4 +333,79 @@ class BillController extends Controller
 
         echo 'done';
     }
+
+    public function excelUpload(){
+        $title = ' | Excel Upload';
+        $plants = Plant::where('status', 1)->get();
+        $currencies = Currency::where('status', 1)->get();
+
+        return view('bill.excel_upload', compact('title', 'plants', 'currencies'));
+    }
+
+    public function uploadFile(Request $request){
+        $this->validate(request(), [
+            'plant'   => 'required',
+            'currency'   => 'required',
+            'upload_file'   => 'required|mimes:xls,xlsx',
+        ]);
+
+        $plant = $request->plant;
+        $currency = $request->currency;
+        $path = $request->file('upload_file')->getRealPath();
+
+        $spreadsheet = IOFactory::load($path);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+//        Checking Date
+        Carbon::macro('checkDate', function (
+            $date,
+            $month = null,
+            $day = null
+        ) {
+            if (!is_null($day)) {
+                $date = "{$date}-{$month}-{$day}";
+            }
+
+            $parsed = date_parse($date);
+
+            return $parsed['error_count'] == 0 &&
+                ($parsed['warning_count'] == 0 ||
+                    !in_array(
+                        'The parsed date was invalid',
+                        $parsed['warnings']
+            ));
+        });
+//        Checking Date
+
+        foreach ($sheetData as $row => $value) {
+
+            if($row > 1){
+
+                if(!empty($value['B']) && !empty($value['C']) && (Carbon::checkDate($value['D']) == true)){
+                    $bill = new Bill();
+                    $bill->party_name = $value['A'];
+                    $bill->po_no = $value['B'];
+                    $bill->bill_no = $value['C'];
+                    $bill->bill_date = Carbon::parse($value['D'])->format('Y-m-d');
+                    $bill->bill_gross_value = $value['E'];
+                    $bill->plant_id = $plant;
+                    $bill->currency_id = $currency;
+                    $bill->status = 200;
+                    $bill->receipt_date_by_tr = Carbon::now()->format('Y-m-d');
+                    $bill->save();
+
+                    $bill_id = $bill->id;
+                    $bill_tracking_no_update = Bill::find($bill_id);
+                    $bill_tracking_no_update->tracking_no = $bill_id.'-'.date('Y-m');
+                    $bill_tracking_no_update->save();
+                }
+
+            }
+
+        }
+
+        return back()->with('success', 'Excel Data Imported successfully.');
+    }
+
+
 }

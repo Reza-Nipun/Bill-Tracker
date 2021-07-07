@@ -391,6 +391,9 @@
 <script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 <!-- BS-Stepper -->
 <script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
+<!-- bs-custom-file-input -->
+<script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
 <script>
     $(function () {
         $("#example1").DataTable({
@@ -465,6 +468,8 @@
         $('#timepicker').datetimepicker({
             format: 'LT'
         })
+
+        bsCustomFileInput.init();
     });
 </script>
 </body>

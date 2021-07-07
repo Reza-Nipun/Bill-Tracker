@@ -100,10 +100,12 @@
                                         <label for="bill_status_filter">Bill Status</label>
                                         <select class="form-control select2bs4" style="width: 100%;" name="bill_status_filter" id="bill_status_filter">
                                             <option value="">Select Status</option>
-                                            <option value="0">TR Receive</option>
-                                            <option value="1">Payment Proposal</option>
-                                            <option value="2">Payment Approve</option>
-                                            <option value="3">Cheque Handover</option>
+                                            <option value="100">Return to AP</option>
+                                            <option value="200">Receipt by TR</option>
+                                            <option value="300">Payment Proposal</option>
+                                            <option value="301">Payment Approve</option>
+                                            <option value="400">Check Printed</option>
+                                            <option value="401">Cheque Handover</option>
                                         </select>
                                     </div>
                                     <!-- /.form-group -->
@@ -125,7 +127,7 @@
                                 <!-- /.col -->
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Receipt Date Range <span class="badge badge-danger" onclick="return $('#receipt_date_range_filter').val('');"><i class="far fa-calendar-times"></i></span></label>
+                                        <label for="">TR Receipt Date Range <span class="badge badge-danger" onclick="return $('#receipt_date_range_filter').val('');"><i class="far fa-calendar-times"></i></span></label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -184,9 +186,8 @@
                                         <th>Curr</th>
                                         <th>Plant</th>
                                         <th>Cheque#</th>
-                                        <th style="width: 50px">Status</th>
+                                        <th>Status</th>
                                         <th>Date</th>
-
                                     </tr>
                                 </thead>
                                 <tbody id="tbody_id">
@@ -482,6 +483,36 @@
 </div>
 <!-- /.modal -->
 
+<div class="modal fade" id="modal-lg-6">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5>No Options are Selected!</h5>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 <script type="text/javascript">
 
 
@@ -502,6 +533,8 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id_return_to_ap").val('');
+                    $("#return_to_ap_remarks").val('');
                     $("#modal-lg-1").modal('hide');
                     $("#search_btn").click();
                 }
@@ -525,6 +558,7 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id_receipt_by_tr").val('');
                     $("#modal-lg-2").modal('hide');
                     $("#search_btn").click();
                 }
@@ -548,6 +582,7 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id_payment_proposal").val('');
                     $("#modal-lg-3").modal('hide');
                     $("#search_btn").click();
                 }
@@ -571,6 +606,7 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id_approve_payment_proposal").val('');
                     $("#modal-lg-4").modal('hide');
                     $("#search_btn").click();
                 }
@@ -596,6 +632,8 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id").val('');
+                    $("#cheque_no").val('');
                     $("#modal-lg").modal('hide');
                     $("#search_btn").click();
                 }
@@ -619,6 +657,7 @@
             dataType: "html",
             success: function (data) {
                 if(data == 'done'){
+                    $("#bill_id_cheque_handover").val('');
                     $("#modal-lg-5").modal('hide');
                     $("#search_btn").click();
                 }
@@ -639,7 +678,7 @@
         var bill_date_range_filter = bill_dt_range_filter.split(" - ");
 
         var bill_date_from = bill_date_range_filter[0];
-        var bill_date_to = bill_date_range_filter[1];
+        var bill_date_to = (bill_date_range_filter[1] != undefined ? bill_date_range_filter[1] : '');
 //        Bill Date Range End
 
 //        Receipt Date Range Start
@@ -647,7 +686,7 @@
         var receipt_date_range_filter = receipt_dt_range_filter.split(" - ");
 
         var receipt_date_from = receipt_date_range_filter[0];
-        var receipt_date_to = receipt_date_range_filter[1];
+        var receipt_date_to = (receipt_date_range_filter[1] != undefined ? receipt_date_range_filter[1] : '');
 //        Receipt Date Range End
 
 //        Cheque Handover Date Range Start
@@ -655,22 +694,28 @@
         var cheque_handover_date_range_filter = cheque_handover_dt_range_filter.split(" - ");
 
         var cheque_handover_date_from = cheque_handover_date_range_filter[0];
-        var cheque_handover_date_to = cheque_handover_date_range_filter[1];
+        var cheque_handover_date_to = (cheque_handover_date_range_filter[1] != undefined ? cheque_handover_date_range_filter[1] : '');
 //        Cheque Handover Date Range End
 
-        $("#tbody_id").empty();
-        $(".loader").css('display', 'block');
 
-        $.ajax({
-            url: "{{ route("search_bill") }}",
-            type:'POST',
-            data: {_token:"{{csrf_token()}}", bill_no: bill_no, po_no: po_no, party_name: party_name, plant_id: plant_id, cheque_no: cheque_no, status: bill_status, bill_date_from: bill_date_from, bill_date_to: bill_date_to, receipt_date_from: receipt_date_from, receipt_date_to: receipt_date_to, cheque_handover_date_from: cheque_handover_date_from, cheque_handover_date_to: cheque_handover_date_to},
-            dataType: "html",
-            success: function (data) {
-                $("#tbody_id").append(data);
-                $(".loader").css('display', 'none');
-            }
-        });
+//        if(bill_no=='' && po_no=='' && party_name=='' && plant_id=='' && cheque_no=='' && bill_status=='' && bill_date_from=='' && bill_date_to==undefined && receipt_date_from=='' && receipt_date_to==undefined && cheque_handover_date_from=='' && cheque_handover_date_to==undefined){
+//            $("#modal-lg-6").modal('show');
+//        }else{
+            $(".loader").css('display', 'block');
+            $("#tbody_id").empty();
+
+            $.ajax({
+                url: "{{ route("search_bill") }}",
+                type:'POST',
+                data: {_token:"{{csrf_token()}}", bill_no: bill_no, po_no: po_no, party_name: party_name, plant_id: plant_id, cheque_no: cheque_no, status: bill_status, bill_date_from: bill_date_from, bill_date_to: bill_date_to, receipt_date_from: receipt_date_from, receipt_date_to: receipt_date_to, cheque_handover_date_from: cheque_handover_date_from, cheque_handover_date_to: cheque_handover_date_to},
+                dataType: "html",
+                success: function (data) {
+                    $("#tbody_id").append(data);
+                    $(".loader").css('display', 'none');
+                }
+            });
+//        }
+
     }
 
     function ExportToExcel(tableid) {

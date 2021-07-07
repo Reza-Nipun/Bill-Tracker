@@ -30,8 +30,6 @@
     <!-- dropzonejs -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/min/dropzone.min.css') }}">
 
-
-
     <style>
         .loader {
             border: 20px solid #f3f3f3;
@@ -340,6 +338,10 @@
 <script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 <!-- BS-Stepper -->
 <script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
+
+<!-- bs-custom-file-input -->
+<script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
 <script>
     $(function () {
         $("#example1").DataTable({
@@ -414,6 +416,8 @@
         $('#timepicker').datetimepicker({
             format: 'LT'
         })
+
+        bsCustomFileInput.init();
     });
 </script>
 </body>
