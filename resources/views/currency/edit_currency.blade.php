@@ -63,14 +63,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="currency">Currency <span style="color: red">*</span></label>
-                                    <select class="form-control select2bs4" style="width: 100%;" name="currency" id="currency">
-                                        <option value="">Select Currency</option>
-
-                                        @foreach($currencies as $currency)
-                                            <option value="{{ $currency->id }}">{{ $currency->currency }}</option>
-                                        @endforeach
-
-                                    </select>
+                                    <input type="text" class="form-control" id="currency" name="currency" placeholder="Enter Currency" value="{{ $currency->currency }}">
                                 </div>
                                 <!-- /.form-group -->
                             </div>

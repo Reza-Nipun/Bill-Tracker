@@ -496,7 +496,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <h5>No Options are Selected!</h5>
+                            <h5 id="warning_message">No Options are Selected!</h5>
                         </div>
                         <!-- /.form-group -->
                     </div>
@@ -617,6 +617,7 @@
     function chequePrintModal(bill_id, bill_no) {
         $("#bill_no").val(bill_no);
         $("#bill_id").val(bill_id);
+        $("#cheque_no").val('');
 
         $("#modal-lg").modal('show');
     }
@@ -625,20 +626,27 @@
         var bill_id = $("#bill_id").val();
         var cheque_no = $("#cheque_no").val();
 
-        $.ajax({
-            url: "{{ route("cheque_print") }}",
-            type:'POST',
-            data: {_token:"{{csrf_token()}}", bill_id: bill_id, cheque_no: cheque_no},
-            dataType: "html",
-            success: function (data) {
-                if(data == 'done'){
-                    $("#bill_id").val('');
-                    $("#cheque_no").val('');
-                    $("#modal-lg").modal('hide');
-                    $("#search_btn").click();
+        if(cheque_no != ''){
+            $.ajax({
+                url: "{{ route("cheque_print") }}",
+                type:'POST',
+                data: {_token:"{{csrf_token()}}", bill_id: bill_id, cheque_no: cheque_no},
+                dataType: "html",
+                success: function (data) {
+                    if(data == 'done'){
+                        $("#bill_id").val('');
+                        $("#cheque_no").val('');
+                        $("#modal-lg").modal('hide');
+                        $("#search_btn").click();
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            $("#modal-lg").modal('hide');
+            $("#warning_message").text('Please Input the Cheque Information!');
+            $("#modal-lg-6").modal('show');
+        }
+
     }
 
     function chequeHandoverModal(bill_id) {

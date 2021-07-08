@@ -392,6 +392,7 @@ class BillController extends Controller
                     $bill->currency_id = $currency;
                     $bill->status = 200;
                     $bill->receipt_date_by_tr = Carbon::now()->format('Y-m-d');
+                    $bill->user_id = Auth::user()->id;
                     $bill->save();
 
                     $bill_id = $bill->id;
