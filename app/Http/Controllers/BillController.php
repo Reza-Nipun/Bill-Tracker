@@ -225,19 +225,19 @@ class BillController extends Controller
         foreach ($bills AS $k => $bill){
 
             if ($bill->status == 100){
-                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "TR Receipt" onclick = "receiptByTRModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> TR Receipt</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "TR Receipt" onclick = "receiptByTRModal('."'".$bill->id."'".')" >TR~Receipt</span>';
             }
             elseif ($bill->status == 200){
-                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "Payment Proposal" onclick = "paymentProposalModal('."'".$bill->id."'".')" ><i class="fas fa-hand-holding-usd" ></i> Proposal</span><span class="btn btn-xs btn-danger ml-1" title="Return to AP" onclick="returnToAPModal('."'".$bill->id."'".')"><i class="fas fa-undo-alt"></i> Return to AP</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "Payment Proposal" onclick = "paymentProposalModal('."'".$bill->id."'".')" >Proposal</span><span class="btn btn-xs btn-danger ml-1" title="Return to AP" onclick="returnToAPModal('."'".$bill->id."'".')">AP~Return</span>';
             }
             elseif($bill->status == 300){
-                $change_status_btn = '<span class="btn btn-xs btn-success ml-1" title = "Payment Approve" onclick = "paymentApprovalModal('."'".$bill->id."'".')" ><i class="fas fa-money-check-alt" ></i> Approve</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-success ml-1" title = "Payment Approve" onclick = "paymentApprovalModal('."'".$bill->id."'".')" >Approve</span>';
             }
             elseif($bill->status == 301){
-                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Print" onclick = "chequePrintModal('."'".$bill->id."'".', '."'".$bill->bill_no."'".')" ><i class="fas fa-money-check"></i > Cheque</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Print" onclick = "chequePrintModal('."'".$bill->id."'".', '."'".$bill->bill_no."'".')" >Cheque</span>';
             }
             elseif($bill->status == 400){
-                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Handover" onclick = "chequeHandoverModal('."'".$bill->id."'".')" ><i class="fas fa-money-check" ></i> Handover</span>';
+                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Handover" onclick = "chequeHandoverModal('."'".$bill->id."'".')" >Handover</span>';
             }else{
                 $change_status_btn = '';
             }
@@ -255,7 +255,12 @@ class BillController extends Controller
             $new_row .= '<td>'.$bill->plant->plant_name.'</td>';
             $new_row .= '<td>'.$bill->cheque_no.'</td>';
             $new_row .= '<td>'.($bill->status == 100 ? 'Return to AP' : ($bill->status == 200 ? 'Received by TR' : ($bill->status == 300 ? 'Payment Proposal' : ($bill->status == 301 ? 'Approved for Payment' : ($bill->status == 400 ? 'Check Print' : ($bill->status == 401 ? 'Check Handover' : '')))))).'</td>';
-            $new_row .= '<td>'.'<span class="badge badge-danger">AP-Return: '.$bill->return_to_ap_date.'</span><br /> <span class="badge badge-secondary">TR-Receipt: '.$bill->receipt_date_by_tr.'</span><br /> <span class="badge badge-info">Proposal: '.$bill->payment_proposal_date.'</span><br /> <span class="badge badge-warning">Approve: '.$bill->approved_for_payment_date.'</span><br /> <span class="badge badge-primary">Cheque: '.$bill->cheque_print_date.'</span><br /> <span class="badge badge-success">Handover: '.$bill->cheque_handover_date.'</span></td>';
+            $new_row .= '<td>'.$bill->return_to_ap_date.'</td>';
+            $new_row .= '<td>'.$bill->receipt_date_by_tr.'</td>';
+            $new_row .= '<td>'.$bill->payment_proposal_date.'</td>';
+            $new_row .= '<td>'.$bill->approved_for_payment_date.'</td>';
+            $new_row .= '<td>'.$bill->cheque_print_date.'</td>';
+            $new_row .= '<td>'.$bill->cheque_handover_date.'</td>';
             $new_row .= '</tr>';
 
         }

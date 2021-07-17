@@ -118,7 +118,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                                             </div>
-                                            <input type="text" class="form-control float-right reservationtime" id="bill_date_range_filter">
+                                            <input type="text" autocomplete="off" class="form-control float-right reservationtime" id="bill_date_range_filter">
                                         </div>
                                         <!-- /.input group -->
                                     </div>
@@ -187,7 +187,12 @@
                                         <th>Plant</th>
                                         <th>Cheque#</th>
                                         <th>Status</th>
-                                        <th>Date</th>
+                                        <th>AP-Return</th>
+                                        <th>TR-Receipt</th>
+                                        <th>Payment Proposal</th>
+                                        <th>Payment Approval</th>
+                                        <th>Cheque Print</th>
+                                        <th>Handover</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody_id">
@@ -200,26 +205,26 @@
                                                 </a>
                                                 @if($bill->status == 100)
                                                     <span class="btn btn-xs btn-warning" title="TR Receipt" onclick="receiptByTRModal('{{ $bill->id }}')">
-                                                        <i class="fas fa-hand-holding-usd"></i> TR Receipt
+                                                        TR~Receipt
                                                     </span>
                                                 @elseif($bill->status == 200)
                                                     <span class="btn btn-xs btn-warning" title="Payment Proposal" onclick="paymentProposalModal('{{ $bill->id }}')">
-                                                        <i class="fas fa-hand-holding-usd"></i> Proposal
+                                                        Proposal
                                                     </span>
                                                     <span class="btn btn-xs btn-danger" title="Return to AP" onclick="returnToAPModal('{{ $bill->id }}')">
-                                                        <i class="fas fa-undo-alt"></i> Return to AP
+                                                        AP~Return
                                                     </span>
                                                 @elseif($bill->status == 300)
                                                     <span class="btn btn-xs btn-success" title="Payment Approve" onclick="paymentApprovalModal('{{ $bill->id }}')">
-                                                        <i class="fas fa-money-check-alt"></i> Approve
+                                                        Approve
                                                     </span>
                                                 @elseif($bill->status == 301)
                                                     <span class="btn btn-xs btn-info" title="Cheque Print" onclick="chequePrintModal('{{ $bill->id }}', '{{ $bill->bill_no }}')">
-                                                        <i class="fas fa-money-check"></i> Cheque
+                                                        Cheque
                                                     </span>
                                                 @elseif($bill->status == 400)
                                                     <span class="btn btn-xs btn-info" title="Cheque Handover" onclick="chequeHandoverModal('{{ $bill->id }}')">
-                                                        <i class="fas fa-money-check"></i> Handover
+                                                        Handover
                                                     </span>
                                                 @endif
                                             </td>
@@ -248,13 +253,23 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {!! '<span class="badge badge-danger">AP-Return: '.$bill->return_to_ap_date.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-secondary">TR-Receipt: '.$bill->receipt_date_by_tr.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-info">Proposal: '.$bill->payment_proposal_date.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-warning">Approve: '.$bill->approved_for_payment_date.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-primary">Cheque: '.$bill->cheque_print_date.'</span>' !!}<br />
-                                                {!! '<span class="badge badge-success">Handover: '.$bill->cheque_handover_date.'</span>' !!}
+                                                {!! $bill->return_to_ap_date !!}
                                              </td>
+                                            <td>
+                                                {!! $bill->receipt_date_by_tr !!}
+                                            </td>
+                                            <td>
+                                                {!! $bill->payment_proposal_date !!}
+                                            </td>
+                                            <td>
+                                                {!! $bill->approved_for_payment_date !!}
+                                            </td>
+                                            <td>
+                                                {!! $bill->cheque_print_date !!}
+                                            </td>
+                                            <td>
+                                                {!! $bill->cheque_handover_date !!}
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

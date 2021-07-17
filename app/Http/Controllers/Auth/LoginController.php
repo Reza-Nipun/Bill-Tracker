@@ -54,7 +54,7 @@ class LoginController extends Controller
 
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'], 'status' => 1)))
         {
-            return view('home');
+            return redirect('home');
         }else{
             return $this->sendFailedLoginResponse($request);
         }
