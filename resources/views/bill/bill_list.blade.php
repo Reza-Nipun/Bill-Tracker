@@ -2,6 +2,10 @@
 
 @section('content')
 
+    <style>
+        .td{white-space:nowrap}
+    </style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -166,11 +170,16 @@
                                     <div class="loader" style="display: none;"></div>
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-2">
-                                    <button class="btn btn-xs btn-secondary" style="color: #FFF;" onclick="ExportToExcel('table_id')"><b>Export Excel</b></button>
-                                    <a href="{{ route('bill.create') }}" class="btn btn-xs btn-success">
+                                <div class="col-md-3">
+                                    <button class="btn btn-sm btn-secondary" style="color: #FFF;" onclick="ExportToExcel('table_id')">
+                                        <i class="fas fa-file-excel"></i> Export Excel
+                                    </button>
+                                    <a href="{{ route('bill.create') }}" class="btn btn-sm btn-success">
                                         <i class="fas fa-plus"></i> Create Bill
                                     </a>
+                                 @if(Auth::user()->is_admin == 1)
+                                    <span class="btn btn-sm btn-danger" onclick="deleteBillModal()"><i class="fas fa-trash"></i> Delete</span>
+                                 @endif
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -183,7 +192,11 @@
                                 <table id="table_id" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            {{--<th>SL</th>--}}
+                                            @if(Auth::user()->is_admin == 1)
+                                                <th>
+                                                    <input type="checkbox" class="" id="checkAll" style="width:2vw; height:3vh;">
+                                                </th>
+                                            @endif
                                             <th>Action</th>
                                             <th>Track#</th>
                                             <th>Party</th>
@@ -206,8 +219,12 @@
                                     <tbody id="tbody_id">
                                         @foreach($bills as $k => $bill)
                                             <tr>
-                                                {{--<td>{{ $k+1 }}</td>--}}
-                                                <td>
+                                                @if(Auth::user()->is_admin == 1)
+                                                    <td>
+                                                        <input type="checkbox" class="checkItem" id="" name="checkItem[]" style="width:2vw; height:3vh;" value="{{ $bill->id }}">
+                                                    </td>
+                                                @endif
+                                                <td class="td">
                                                     <a href="{{ route('bill.edit', $bill->id) }}" class="btn btn-xs btn-primary" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
@@ -236,16 +253,16 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $bill->tracking_no }}</td>
+                                                <td class="td">{{ $bill->tracking_no }}</td>
                                                 <td>{{ $bill->party_name }}</td>
                                                 <td>{{ $bill->po_no }}</td>
                                                 <td>{{ $bill->bill_no }}</td>
-                                                <td>{{ $bill->bill_date }}</td>
+                                                <td class="td">{{ $bill->bill_date }}</td>
                                                 <td>{{ $bill->bill_gross_value }}</td>
                                                 <td>{{ $bill->currency->currency }}</td>
                                                 <td>{{ $bill->plant->plant_name }}</td>
                                                 <td>{{ $bill->cheque_no }}</td>
-                                                <td>
+                                                <td class="td">
                                                     @if($bill->status == 100)
                                                         Return to AP
                                                     @elseif($bill->status == 200)
@@ -260,22 +277,22 @@
                                                         Check Handover
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->return_to_ap_date !!}
                                                  </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->receipt_date_by_tr !!}
                                                 </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->payment_proposal_date !!}
                                                 </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->approved_for_payment_date !!}
                                                 </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->cheque_print_date !!}
                                                 </td>
-                                                <td>
+                                                <td class="td">
                                                     {!! $bill->cheque_handover_date !!}
                                                 </td>
                                             </tr>
@@ -290,15 +307,16 @@
                 </div>
                 <!-- /.col -->
             </div>
+            </div>
             <!-- /.row -->
 
-            <div class="row">
-                <div class="col-lg-6 offset-lg-3 d-flex">
-                    <ul class="pagination mx-auto">
-                        {{ $bills->links() }}
-                    </ul>
-                </div>
-            </div>
+            {{--<div class="row">--}}
+                {{--<div class="col-lg-6 offset-lg-3 d-flex">--}}
+                    {{--<ul class="pagination mx-auto">--}}
+                        {{--{{ $bills->links() }}--}}
+                    {{--</ul>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
         <!-- /.container-fluid -->
     </section>
@@ -537,7 +555,42 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<div class="modal fade" id="modal-lg-7">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning <i class="fas fa-exclamation-triangle"></i></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h5 id="warning_message">Are You Sure to Delete Selected Bills?</h5>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" onclick="deleteBill()">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
+
+    $(document).on('click','#checkAll',function () {
+        $('.checkItem').not(this).prop('checked', this.checked);
+    });
 
     function returnToAPModal(bill_id) {
         $("#bill_id_return_to_ap").val(bill_id);
@@ -809,6 +862,40 @@
 
         return false;
         //return (sa);
+    }
+
+    function deleteBillModal() {
+        $("#modal-lg-7").modal('show');
+    }
+
+    function deleteBill(){
+        var bill_ids = [];
+        $('input.checkItem:checkbox:checked').each(function () {
+            var sThisVal = $(this).val();
+
+            bill_ids.push(sThisVal);
+        });
+
+        if(bill_ids.length > 0){
+            $.ajax({
+                url: "{{ route("delete_bill") }}",
+                type:'POST',
+                data: {_token:"{{csrf_token()}}", bill_ids: bill_ids},
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+
+                    if(data == "success"){
+                        $("#modal-lg-7").modal('hide');
+                        $("#search_btn").click();
+                    }
+                }
+            });
+        }else{
+            $("#modal-lg-7").modal('hide');
+            $("#modal-lg-6").modal('show');
+        }
+
     }
 </script>
 @endsection

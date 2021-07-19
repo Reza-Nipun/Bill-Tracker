@@ -20,7 +20,7 @@ class BillController extends Controller
     public function index()
     {
         $title = ' | Bill List';
-        $bills = Bill::where('status', '<>', 401)->orderBy('bill_date', 'ASC')->paginate(100);
+        $bills = Bill::where('status', '<>', 401)->orderBy('bill_date', 'ASC')->get();
         $bill_nos = Bill::groupBy('bill_no')->get();
         $po_nos = Bill::groupBy('po_no')->get();
         $plants = Plant::where('status', 1)->get();
@@ -220,52 +220,7 @@ class BillController extends Controller
 
         $bills = $query->get();
 
-        $new_row = '';
-
-        foreach ($bills AS $k => $bill){
-
-            if ($bill->status == 100){
-                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "TR Receipt" onclick = "receiptByTRModal('."'".$bill->id."'".')" >TR~Receipt</span>';
-            }
-            elseif ($bill->status == 200){
-                $change_status_btn = '<span class="btn btn-xs btn-warning ml-1" title = "Payment Proposal" onclick = "paymentProposalModal('."'".$bill->id."'".')" >Proposal</span><span class="btn btn-xs btn-danger ml-1" title="Return to AP" onclick="returnToAPModal('."'".$bill->id."'".')">AP~Return</span>';
-            }
-            elseif($bill->status == 300){
-                $change_status_btn = '<span class="btn btn-xs btn-success ml-1" title = "Payment Approve" onclick = "paymentApprovalModal('."'".$bill->id."'".')" >Approve</span>';
-            }
-            elseif($bill->status == 301){
-                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Print" onclick = "chequePrintModal('."'".$bill->id."'".', '."'".$bill->bill_no."'".')" >Cheque</span>';
-            }
-            elseif($bill->status == 400){
-                $change_status_btn = '<span class="btn btn-xs btn-info ml-1" title = "Cheque Handover" onclick = "chequeHandoverModal('."'".$bill->id."'".')" >Handover</span>';
-            }else{
-                $change_status_btn = '';
-            }
-
-            $new_row .= '<tr>';
-//            $new_row .= '<td>'.($k+1).'</td>';
-            $new_row .= '<td><a href="'.route('bill.edit', $bill->id).'" class="btn btn-xs btn-primary" title="Edit"><i class="fas fa-edit"></i></a>'.$change_status_btn.'</td>';
-            $new_row .= '<td>'.$bill->tracking_no.'</td>';
-            $new_row .= '<td>'.$bill->party_name.'</td>';
-            $new_row .= '<td>'.$bill->po_no.'</td>';
-            $new_row .= '<td>'.$bill->bill_no.'</td>';
-            $new_row .= '<td>'.$bill->bill_date.'</td>';
-            $new_row .= '<td>'.$bill->bill_gross_value.'</td>';
-            $new_row .= '<td>'.$bill->currency->currency.'</td>';
-            $new_row .= '<td>'.$bill->plant->plant_name.'</td>';
-            $new_row .= '<td>'.$bill->cheque_no.'</td>';
-            $new_row .= '<td>'.($bill->status == 100 ? 'Return to AP' : ($bill->status == 200 ? 'Received by TR' : ($bill->status == 300 ? 'Payment Proposal' : ($bill->status == 301 ? 'Approved for Payment' : ($bill->status == 400 ? 'Check Print' : ($bill->status == 401 ? 'Check Handover' : '')))))).'</td>';
-            $new_row .= '<td>'.$bill->return_to_ap_date.'</td>';
-            $new_row .= '<td>'.$bill->receipt_date_by_tr.'</td>';
-            $new_row .= '<td>'.$bill->payment_proposal_date.'</td>';
-            $new_row .= '<td>'.$bill->approved_for_payment_date.'</td>';
-            $new_row .= '<td>'.$bill->cheque_print_date.'</td>';
-            $new_row .= '<td>'.$bill->cheque_handover_date.'</td>';
-            $new_row .= '</tr>';
-
-        }
-
-        return $new_row;
+        return view('bill.bill_filter', compact('bills'));
     }
 
     public function returnToAP(Request $request){
@@ -413,5 +368,13 @@ class BillController extends Controller
         return back()->with('success', 'Excel Data Imported successfully.');
     }
 
+    public function deleteBill(Request $request){
+        $bill_ids = $request->bill_ids;
 
+        foreach($bill_ids as $bill_id){
+            Bill::destroy($bill_id);
+        }
+
+        return response()->json('success', 200);
+    }
 }
