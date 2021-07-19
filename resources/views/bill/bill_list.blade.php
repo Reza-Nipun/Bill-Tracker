@@ -29,13 +29,13 @@
 
                     <!-- /.card -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <a href="{{ route('bill.create') }}" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Create Bill
-                                </a>
-                            </h3>
-                        </div>
+                        {{--<div class="card-header">--}}
+                            {{--<h3 class="card-title">--}}
+                                {{--<a href="{{ route('bill.create') }}" class="btn btn-success">--}}
+                                    {{--<i class="fas fa-plus"></i> Create Bill--}}
+                                {{--</a>--}}
+                            {{--</h3>--}}
+                        {{--</div>--}}
                         <!-- /.card-header -->
 
                         <div class="card-body">
@@ -43,7 +43,7 @@
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="bill_no_filter">Bill No</label>
-                                        <select class="form-control select2bs4" style="width: 100%;" name="bill_no_filter" id="bill_no_filter">
+                                        <select class="h-25 form-control select2bs4" style="width: 100%;" name="bill_no_filter" id="bill_no_filter">
                                             <option value="">Select Bill</option>
                                             @foreach($bill_nos as $bill_no)
                                                 <option value="{{ $bill_no->bill_no }}">{{ $bill_no->bill_no }}</option>
@@ -153,7 +153,7 @@
                                     <!-- /.form group -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="form-group">
                                         <label for="search_btn"><span style="color: #ffffff;">.</span></label>
                                         <button class="form-control btn btn-primary" id="search_btn" onclick="searchBills()">SEARCH</button>
@@ -166,114 +166,123 @@
                                     <div class="loader" style="display: none;"></div>
                                 </div>
                                 <!-- /.col -->
+                                <div class="col-md-2">
+                                    <button class="btn btn-xs btn-secondary" style="color: #FFF;" onclick="ExportToExcel('table_id')"><b>Export Excel</b></button>
+                                    <a href="{{ route('bill.create') }}" class="btn btn-xs btn-success">
+                                        <i class="fas fa-plus"></i> Create Bill
+                                    </a>
+                                </div>
+                                <!-- /.col -->
                             </div>
                             <!-- /.row -->
-                            </div>
                         </div>
-                    <button class="btn btn-secondary" style="color: #FFF;" onclick="ExportToExcel('table_id')"><b>Export Excel</b></button>
-                        <div class="card-body table-responsive p-0">
-                            <table id="table_id" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        {{--<th>SL</th>--}}
-                                        <th>Action</th>
-                                        <th>Track#</th>
-                                        <th>Party</th>
-                                        <th>PO#</th>
-                                        <th>Bill#</th>
-                                        <th>Bill Date</th>
-                                        <th>Gross Value</th>
-                                        <th>Curr</th>
-                                        <th>Plant</th>
-                                        <th>Cheque#</th>
-                                        <th>Status</th>
-                                        <th>AP-Return</th>
-                                        <th>TR-Receipt</th>
-                                        <th>Payment Proposal</th>
-                                        <th>Payment Approval</th>
-                                        <th>Cheque Print</th>
-                                        <th>Handover</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody_id">
-                                    @foreach($bills as $k => $bill)
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive p-0 tableFixHead">
+                                <table id="table_id" class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            {{--<td>{{ $k+1 }}</td>--}}
-                                            <td>
-                                                <a href="{{ route('bill.edit', $bill->id) }}" class="btn btn-xs btn-primary" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                @if($bill->status == 100)
-                                                    <span class="btn btn-xs btn-warning" title="TR Receipt" onclick="receiptByTRModal('{{ $bill->id }}')">
-                                                        TR~Receipt
-                                                    </span>
-                                                @elseif($bill->status == 200)
-                                                    <span class="btn btn-xs btn-warning" title="Payment Proposal" onclick="paymentProposalModal('{{ $bill->id }}')">
-                                                        Proposal
-                                                    </span>
-                                                    <span class="btn btn-xs btn-danger" title="Return to AP" onclick="returnToAPModal('{{ $bill->id }}')">
-                                                        AP~Return
-                                                    </span>
-                                                @elseif($bill->status == 300)
-                                                    <span class="btn btn-xs btn-success" title="Payment Approve" onclick="paymentApprovalModal('{{ $bill->id }}')">
-                                                        Approve
-                                                    </span>
-                                                @elseif($bill->status == 301)
-                                                    <span class="btn btn-xs btn-info" title="Cheque Print" onclick="chequePrintModal('{{ $bill->id }}', '{{ $bill->bill_no }}')">
-                                                        Cheque
-                                                    </span>
-                                                @elseif($bill->status == 400)
-                                                    <span class="btn btn-xs btn-info" title="Cheque Handover" onclick="chequeHandoverModal('{{ $bill->id }}')">
-                                                        Handover
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $bill->tracking_no }}</td>
-                                            <td>{{ $bill->party_name }}</td>
-                                            <td>{{ $bill->po_no }}</td>
-                                            <td>{{ $bill->bill_no }}</td>
-                                            <td>{{ $bill->bill_date }}</td>
-                                            <td>{{ $bill->bill_gross_value }}</td>
-                                            <td>{{ $bill->currency->currency }}</td>
-                                            <td>{{ $bill->plant->plant_name }}</td>
-                                            <td>{{ $bill->cheque_no }}</td>
-                                            <td>
-                                                @if($bill->status == 100)
-                                                    Return to AP
-                                                @elseif($bill->status == 200)
-                                                    Receipt by TR
-                                                @elseif($bill->status == 300)
-                                                    Payment Proposal
-                                                @elseif($bill->status == 301)
-                                                    Approved for Payment
-                                                @elseif($bill->status == 400)
-                                                    Check Printed
-                                                @elseif($bill->status == 401)
-                                                    Check Handover
-                                                @endif
-                                            </td>
-                                            <td>
-                                                {!! $bill->return_to_ap_date !!}
-                                             </td>
-                                            <td>
-                                                {!! $bill->receipt_date_by_tr !!}
-                                            </td>
-                                            <td>
-                                                {!! $bill->payment_proposal_date !!}
-                                            </td>
-                                            <td>
-                                                {!! $bill->approved_for_payment_date !!}
-                                            </td>
-                                            <td>
-                                                {!! $bill->cheque_print_date !!}
-                                            </td>
-                                            <td>
-                                                {!! $bill->cheque_handover_date !!}
-                                            </td>
+                                            {{--<th>SL</th>--}}
+                                            <th>Action</th>
+                                            <th>Track#</th>
+                                            <th>Party</th>
+                                            <th>PO#</th>
+                                            <th>Bill#</th>
+                                            <th>Bill Date</th>
+                                            <th>Gross Value</th>
+                                            <th>Curr</th>
+                                            <th>Plant</th>
+                                            <th>Cheque#</th>
+                                            <th>Status</th>
+                                            <th>AP-Return</th>
+                                            <th>TR-Receipt</th>
+                                            <th>Payment Proposal</th>
+                                            <th>Payment Approval</th>
+                                            <th>Cheque Print</th>
+                                            <th>Handover</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody id="tbody_id">
+                                        @foreach($bills as $k => $bill)
+                                            <tr>
+                                                {{--<td>{{ $k+1 }}</td>--}}
+                                                <td>
+                                                    <a href="{{ route('bill.edit', $bill->id) }}" class="btn btn-xs btn-primary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    @if($bill->status == 100)
+                                                        <span class="btn btn-xs btn-warning" title="TR Receipt" onclick="receiptByTRModal('{{ $bill->id }}')">
+                                                            TR~Receipt
+                                                        </span>
+                                                    @elseif($bill->status == 200)
+                                                        <span class="btn btn-xs btn-warning" title="Payment Proposal" onclick="paymentProposalModal('{{ $bill->id }}')">
+                                                            Proposal
+                                                        </span>
+                                                        <span class="btn btn-xs btn-danger" title="Return to AP" onclick="returnToAPModal('{{ $bill->id }}')">
+                                                            AP~Return
+                                                        </span>
+                                                    @elseif($bill->status == 300)
+                                                        <span class="btn btn-xs btn-success" title="Payment Approve" onclick="paymentApprovalModal('{{ $bill->id }}')">
+                                                            Approve
+                                                        </span>
+                                                    @elseif($bill->status == 301)
+                                                        <span class="btn btn-xs btn-info" title="Cheque Print" onclick="chequePrintModal('{{ $bill->id }}', '{{ $bill->bill_no }}')">
+                                                            Cheque
+                                                        </span>
+                                                    @elseif($bill->status == 400)
+                                                        <span class="btn btn-xs btn-info" title="Cheque Handover" onclick="chequeHandoverModal('{{ $bill->id }}')">
+                                                            Handover
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $bill->tracking_no }}</td>
+                                                <td>{{ $bill->party_name }}</td>
+                                                <td>{{ $bill->po_no }}</td>
+                                                <td>{{ $bill->bill_no }}</td>
+                                                <td>{{ $bill->bill_date }}</td>
+                                                <td>{{ $bill->bill_gross_value }}</td>
+                                                <td>{{ $bill->currency->currency }}</td>
+                                                <td>{{ $bill->plant->plant_name }}</td>
+                                                <td>{{ $bill->cheque_no }}</td>
+                                                <td>
+                                                    @if($bill->status == 100)
+                                                        Return to AP
+                                                    @elseif($bill->status == 200)
+                                                        Receipt by TR
+                                                    @elseif($bill->status == 300)
+                                                        Payment Proposal
+                                                    @elseif($bill->status == 301)
+                                                        Approved for Payment
+                                                    @elseif($bill->status == 400)
+                                                        Check Printed
+                                                    @elseif($bill->status == 401)
+                                                        Check Handover
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {!! $bill->return_to_ap_date !!}
+                                                 </td>
+                                                <td>
+                                                    {!! $bill->receipt_date_by_tr !!}
+                                                </td>
+                                                <td>
+                                                    {!! $bill->payment_proposal_date !!}
+                                                </td>
+                                                <td>
+                                                    {!! $bill->approved_for_payment_date !!}
+                                                </td>
+                                                <td>
+                                                    {!! $bill->cheque_print_date !!}
+                                                </td>
+                                                <td>
+                                                    {!! $bill->cheque_handover_date !!}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -529,7 +538,6 @@
 </div>
 <!-- /.modal -->
 <script type="text/javascript">
-
 
     function returnToAPModal(bill_id) {
         $("#bill_id_return_to_ap").val(bill_id);
